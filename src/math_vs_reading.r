@@ -15,50 +15,21 @@ min_reading <- min(reading_array, na.rm=TRUE)
 scale <- c(150,160,170,180,190,200,210,220,230)
 min_max <- c(150,230)
 
-print(math_array[1])
-print(reading_array[1])
+#This line is used to use legend out of plot area.
+par(mar=c(5.1, 4, 4.1, 10.2), xpd=TRUE)
 
-
-
-par(mar=c(5.1, 4, 4.1, 11.2), xpd=TRUE)
+#Plot data, insert title, define axis range and set the legend
 plot(reading_array, math_array, xlim=min_max, ylim=min_max, xlab="Reading", 
 	ylab="Math", col="deepskyblue2", pch=19)
-
+title(main="Fitted line plot\nMath = 5.316 + 0.9816 reading")
 axis(1, at=scale)
 axis(2, at=scale)
-
 legend("topright", inset=c(-0.4,0), 
-	legend=c("S            4.27052","Rsq          93.8%", "Rsq(adj)  93.7%"))
+	legend=c("S = 4.27052","Rsq = 93.8%", "Rsq(adj) = 93.7%"))
 
+#Create a square do delimit plot area.
 clip(min_math-5, max_math+5, min_reading-5, max_reading+5)
-abline(5.316, 0.9816, col="deepskyblue2", lwd=2)
-#segments(x0=min_max,y0=min_reading,x1=max_math,y1=max_reading)
-#abline(157,0)
-
-
-
-aux <- lm(math_array~reading_array)
-
-print(summary(aux))
-
-#Residual standard error: 4.271 on 61 degrees of freedom 
-# (3 observations deleted due to missingness)
-#Multiple R-squared:  0.9382,	Adjusted R-squared:  0.9372 
-
-#> summary(aux)[6]
-#$sigma
-#[1] 4.270524
-
-
-#> summary(aux)[8]
-#$r.squared
-#[1] 0.9381974
-
-#> summary(aux)[9]
-#$adj.r.squared
-#[1] 0.9371842
-
-
-#Criar tabelinha no canto superior do grafico com os valores de S, R-sq e R_sq(adj)
-#Criar os titulos
-#Ajustar o layout
+#Create a line
+linear_regression <- lm(math_array~reading_array)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2)
