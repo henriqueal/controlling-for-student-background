@@ -1,0 +1,269 @@
+---
+title: "Controlling for student background"
+author: "Henrique"
+date: "15 de abril de 2018"
+output:
+  html_document:
+    df_print: paged
+---
+
+Inicialmente um boxplot que mostra os dados agrupados nas matérias de Matemática e Leitura para o terceiro quarto e quinto grau:
+```{r boxplot}
+#Graph:1 - Boxplot
+third_grade = read.csv("../input/third_grade.csv")
+fourth_grade = read.csv("../input/fourth_grade.csv")
+fifth_grade = read.csv("../input/fifth_grade.csv", na.strings="-")
+
+print(third_grade)
+print(fourth_grade)
+print(fifth_grade)
+
+boxplot(third_grade$Math, fourth_grade$Math, fifth_grade$Math, third_grade$Reading, 
+	fourth_grade$Reading, fifth_grade$Reading,names = c("3","4", "5", "3","4", "5"),
+	xlab="Math\t\t\t\t\t\t\tReading", ylab="Data", ylim=c(150,230), at=c(1,2,3,6,7,8),
+	border="deepskyblue2", lty=1, lwd=1.5)
+axis(2,at=c(150,160,170,180,190,200,210,220,230))
+title(xlab = "Grade", line = 4)
+```
+
+Depois plotamos um gráfico que mostra a correlação entre as variáveis matemática e leitura. Podemos observar uma alta correlação entre os dados.
+```{r math_vs_reading}
+#Graph:2 - Math vs Reading
+third_grade = read.csv("../input/third_grade.csv")
+fourth_grade = read.csv("../input/fourth_grade.csv")
+fifth_grade = read.csv("../input/fifth_grade.csv", na.strings="-")
+
+math_array <- c(third_grade$Math, fourth_grade$Math, fifth_grade$Math)
+reading_array <- c(third_grade$Reading, fourth_grade$Reading, fifth_grade$Reading)
+
+max_math <- max(math_array, na.rm=TRUE)
+max_reading <- max(reading_array, na.rm=TRUE)
+
+min_math <- min(math_array, na.rm=TRUE)
+min_reading <- min(reading_array, na.rm=TRUE)
+
+scale <- c(150,160,170,180,190,200,210,220,230)
+min_max <- c(150,230)
+
+#This line is used to use legend out of plot area.
+par(mar=c(5.1, 4, 4.1, 10.2), xpd=TRUE)
+
+#Plot data, insert title, define axis range and set the legend
+plot(reading_array, math_array, xlim=min_max, ylim=min_max, xlab="Reading", 
+	ylab="Math", col="deepskyblue2", pch=19)
+title(main="Fitted line plot\nMath = 5.316 + 0.9816 reading")
+axis(1, at=scale)
+axis(2, at=scale)
+legend("topright", inset=c(-0.4,0), 
+	legend=c("S = 4.27052","Rsq = 93.8%", "Rsq(adj) = 93.7%"))
+
+#Create a square do delimit plot area.
+clip(min_math-5, max_math+5, min_reading-5, max_reading+5)
+#Create a line
+linear_regression <- lm(math_array~reading_array)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2)
+```
+
+Já que matemática e leitura são altamente correlatas, então foi escolhido o atributo leitura para verificar a correlação com as outros atributos (pobreza e minoria) ambos em porcentagem.
+```{r reading_vs_poverty}
+#Graph:3 - Reading vs X.Poverty
+third_grade = read.csv("../input/third_grade.csv")
+fourth_grade = read.csv("../input/fourth_grade.csv")
+fifth_grade = read.csv("../input/fifth_grade.csv", na.strings="-")
+
+poverty_array <- c(third_grade$X.Poverty, fourth_grade$X.Poverty, fifth_grade$X.Poverty)
+reading_array <- c(third_grade$Reading, fourth_grade$Reading, fifth_grade$Reading)
+
+max_poverty <- max(poverty_array, na.rm=TRUE)
+max_reading <- max(reading_array, na.rm=TRUE)
+
+min_poverty <- min(poverty_array, na.rm=TRUE)
+min_reading <- min(reading_array, na.rm=TRUE)
+
+x_scale <- c(0,10,20,30,40,50,60,70,80,90)
+y_scale <- c(150,160,170,180,190,200,210,220,230)
+
+min_max_x <- c(0,90)
+min_max_y <- c(150,230)
+
+#Plot data, insert title, define axis range and set the legend
+plot(poverty_array, reading_array, xlim=min_max_x, ylim=min_max_y, xlab="%Poverty", 
+	ylab="Reading", col="deepskyblue2", pch=19)
+
+axis(1, at=x_scale)
+axis(2, at=y_scale)
+
+#Create a square do delimit plot area.
+clip(min_poverty-5, max_poverty+5, min_reading-5, max_reading+5)
+#Create a line
+linear_regression <- lm(reading_array~poverty_array)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2)
+```
+
+```{r reading_vs_minority}
+#Graph:4 - Reading vs X.Minority
+third_grade = read.csv("../input/third_grade.csv")
+fourth_grade = read.csv("../input/fourth_grade.csv")
+fifth_grade = read.csv("../input/fifth_grade.csv", na.strings="-")
+
+minority_array <- c(third_grade$X.Minority, fourth_grade$X.Minority, fifth_grade$X.Minority)
+reading_array <- c(third_grade$Reading, fourth_grade$Reading, fifth_grade$Reading)
+
+max_minority <- max(minority_array, na.rm=TRUE)
+max_reading <- max(reading_array, na.rm=TRUE)
+
+min_minority <- min(minority_array, na.rm=TRUE)
+min_reading <- min(reading_array, na.rm=TRUE)
+
+x_scale <- c(0,10,20,30,40,50,60,70,80,90)
+y_scale <- c(150,160,170,180,190,200,210,220,230)
+
+min_max_x <- c(0,90)
+min_max_y <- c(150,230)
+
+#Plot data, insert title, define axis range and set the legend
+plot(minority_array, reading_array, xlim=min_max_x, ylim=min_max_y, xlab="%Minority", 
+	ylab="Reading", col="deepskyblue2", pch=19)
+
+axis(1, at=x_scale)
+axis(2, at=y_scale)
+
+#Create a square do delimit plot area.
+clip(min_minority-5, max_minority+5, min_reading-5, max_reading+5)
+#Create a line
+linear_regression <- lm(reading_array~minority_array)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2)
+```
+
+Podemos ver que há uma tendência das variáveis serem inversamente correlatas, no entanto, não é tão precisa. Dessa forma, vamos traçar a correlação por grau de escolaridade entre essas variáveis.
+```{r reading_vs_poverty_vs_grade}
+#Graph:5 - Reading vs X.Poverty vs Grade
+third_grade = read.csv("../input/third_grade.csv")
+fourth_grade = read.csv("../input/fourth_grade.csv")
+fifth_grade = read.csv("../input/fifth_grade.csv", na.strings="-")
+
+x_scale <- c(0,10,20,30,40,50,60,70,80,90)
+y_scale <- c(150,160,170,180,190,200,210,220,230)
+
+min_max_x <- c(0,93)
+min_max_y <- c(150,230)
+
+#This line is used to use legend out of plot area.
+par(mar=c(5.1, 4, 4.1, 9.2), xpd=TRUE)
+
+#Plot data, insert title, define axis range and set the legend
+plot(third_grade$X.Poverty, third_grade$Reading, xlim=min_max_x, ylim=min_max_y, 
+	xlab="%Poverty", ylab="Reading", col="deepskyblue2", pch=19)
+axis(1, at=x_scale)
+axis(2, at=y_scale)
+legend("topright", inset=c(-0.16,0), pch=c(21:23),
+	legend=c(3,4,5), lty=1:3, col="deepskyblue2", title="Grade")
+
+#Plot another points (4-th and 5-th grade)
+points(fourth_grade$X.Poverty, fourth_grade$Reading, col="deepskyblue2",
+	pch=15)
+
+points(fifth_grade$X.Poverty, fifth_grade$Reading, col="deepskyblue2",
+	pch=18, cex=1.3)
+
+
+#Create a square do delimit plot area.
+clip(min_poverty-5, 92, min_reading-5, 230)
+#Create lines
+linear_regression <- lm(third_grade$Reading ~ third_grade$X.Poverty)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2)
+
+linear_regression <- lm(fourth_grade$Reading ~ fourth_grade$X.Poverty)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2, lty=2)
+
+linear_regression <- lm(fifth_grade$Reading ~ fifth_grade$X.Poverty)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2, lty=3)
+```
+
+```{r reading_vs_minority_vs_grade}
+#Graph:6 - Reading vs X.Minority vs Grade
+third_grade = read.csv("../input/third_grade.csv")
+fourth_grade = read.csv("../input/fourth_grade.csv")
+fifth_grade = read.csv("../input/fifth_grade.csv", na.strings="-")
+
+x_scale <- c(0,10,20,30,40,50,60,70,80,90)
+y_scale <- c(150,160,170,180,190,200,210,220,230)
+
+min_max_x <- c(0,93)
+min_max_y <- c(150,230)
+
+#This line is used to use legend out of plot area.
+par(mar=c(5.1, 4, 4.1, 9.2), xpd=TRUE)
+
+#Plot data, insert title, define axis range and set the legend
+plot(third_grade$X.Minority, third_grade$Reading, xlim=min_max_x, ylim=min_max_y, 
+	xlab="%Minority", ylab="Reading", col="deepskyblue2", pch=19)
+axis(1, at=x_scale)
+axis(2, at=y_scale)
+legend("topright", inset=c(-0.16,0), pch=c(21:23),
+	legend=c(3,4,5), lty=1:3, col="deepskyblue2", title="Grade")
+
+#Plot another points (4-th and 5-th grade)
+points(fourth_grade$X.Minority, fourth_grade$Reading, col="deepskyblue2",
+	pch=15)
+
+points(fifth_grade$X.Minority, fifth_grade$Reading, col="deepskyblue2",
+	pch=18, cex=1.3)
+
+
+#Create a square do delimit plot area.
+clip(min_minority-5, 92, min_reading-5, 230)
+#Create lines
+linear_regression <- lm(third_grade$Reading ~ third_grade$X.Minority)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2)
+
+linear_regression <- lm(fourth_grade$Reading ~ fourth_grade$X.Minority)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2, lty=2)
+
+linear_regression <- lm(fifth_grade$Reading ~ fifth_grade$X.Minority)
+abline(linear_regression$coefficients[1], linear_regression$coefficients[2], 
+	col="deepskyblue2", lwd=2, lty=3)
+```
+
+O próximo passo é montar uma matriz de correlações entre a variável de leitura para as variáveis de minoria e pobreza para cada grau.
+```{r correlation_poverty_minority}
+#Tab:1 - Correlation
+third_grade = read.csv("../input/third_grade.csv")
+fourth_grade = read.csv("../input/fourth_grade.csv")
+fifth_grade = read.csv("../input/fifth_grade.csv", na.strings="-")
+
+minority_3 <- cor(third_grade$X.Minority, third_grade$Reading, 
+	method="pearson")
+minority_4 <- cor(fourth_grade$X.Minority, fourth_grade$Reading, 
+	method="pearson")
+minority_5 <- cor(fifth_grade$X.Minority, fifth_grade$Reading, 
+	method="pearson", use = "complete.obs")
+
+poverty_3 <- cor(third_grade$X.Poverty, third_grade$Reading, 
+	method="pearson")
+poverty_4 <- cor(fourth_grade$X.Poverty, fourth_grade$Reading, 
+	method="pearson")
+poverty_5 <- cor(fifth_grade$X.Poverty, fifth_grade$Reading, 
+	method="pearson", use = "complete.obs")
+
+cor_between <- c('Reading scores and', '%minority', '%poverty')
+third_grade <- c('', format(round(minority_3, 2), nsmall = 2), 
+	format(round(poverty_3, 2), nsmall = 2))
+fourth_grade <- c('', format(round(minority_4, 2), nsmall = 2), 
+	format(round(poverty_4, 2), nsmall = 2))
+fifth_grade <- c('', format(round(minority_5, 2), nsmall = 2), 
+	format(round(poverty_5, 2), nsmall = 2))
+
+cor_data_frame <- data.frame(cor_between, third_grade, fourth_grade, fifth_grade)
+colnames(cor_data_frame) <- c('Correlation between', '3rd Grade', '4th Grade', '5th Grade')
+
+print(cor_data_frame)
+```
