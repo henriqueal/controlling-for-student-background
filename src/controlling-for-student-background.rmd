@@ -1,0 +1,12 @@
+---
+title: "Controlling for student background"
+author: "Henrique"
+date: "15 de abril de 2018"
+output: pdf_document
+---
+
+
+```{r boxplot}
+#Graph:1 - Boxplot
+c(1,2,3)
+```
