@@ -2,9 +2,6 @@
 title: "Controlling for student background"
 author: "Henrique"
 date: "15 de abril de 2018"
-output:
-  html_document:
-    df_print: paged
 ---
 
 Inicialmente um boxplot que mostra os dados agrupados nas matérias de Matemática e Leitura para o terceiro quarto e quinto grau:

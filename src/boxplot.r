@@ -9,7 +9,7 @@ print(fifth_grade)
 
 boxplot(third_grade$Math, fourth_grade$Math, fifth_grade$Math, third_grade$Reading, 
 	fourth_grade$Reading, fifth_grade$Reading,names = c("3","4", "5", "3","4", "5"),
-	xlab="Math\t\t\t\t\t\t\tReading", ylab="Data", ylim=c(150,230), at=c(1,2,3,6,7,8),
+	xlab="    Math\t\t\t\t\t\t\t\t\tReading", ylab="Data", ylim=c(150,230), at=c(1,2,3,6,7,8),
 	border="deepskyblue2", lty=1, lwd=1.5)
 axis(2,at=c(150,160,170,180,190,200,210,220,230))
 title(xlab = "Grade", line = 4)
